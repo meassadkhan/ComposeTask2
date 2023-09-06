@@ -10,8 +10,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -42,10 +45,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.composetask.R
 import com.example.composetask.model.Movie
+import com.example.composetask.ui.components.ButtonComponent
 import com.example.composetask.ui.components.Header
 import com.example.composetask.ui.components.TopAppBAR
 import com.example.composetask.viewmodel.MainViewModel
@@ -54,7 +59,7 @@ import com.squareup.moshi.Moshi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MoviesScreen(viewModel: MainViewModel, navController: NavController) {
+fun MoviesScreen(viewModel: MainViewModel, navController: NavHostController) {
     data class Movie(var name: String, var id: Int)
 
     var itemList = ArrayList<Movie>()
@@ -66,6 +71,9 @@ fun MoviesScreen(viewModel: MainViewModel, navController: NavController) {
     itemList.add(Movie("SpoiderMan", R.drawable.ic_image))
     itemList.add(Movie("SpoiderMan", R.drawable.ic_image))
     itemList.add(Movie("SpoiderMan", R.drawable.ic_image))
+    itemList.add(Movie("SpoiderMan", R.drawable.ic_image))
+    itemList.add(Movie("SpoiderMan", R.drawable.ic_image))
+
 
     val systemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(
@@ -73,21 +81,42 @@ fun MoviesScreen(viewModel: MainViewModel, navController: NavController) {
     )
     Column(
         modifier = Modifier
-            .background(Color.White)
+            .fillMaxSize()
+            .background(Color.White),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        TopAppBAR()
-        Header("MOVIES")
-        Spacer(
+        Column(
             modifier = Modifier
-                .padding(12.dp)
-        )
+                .background(Color.White)
+        ) {
 
-        LazyVerticalGrid(columns = GridCells.Fixed(3)) {
-            items(itemList) {
-                MovieRow(it.name, it.id) {
-                    navController.navigate("detail_screen")
+            TopAppBAR()
+            Header("MOVIES", modifier = Modifier, navController)
+            Spacer(
+                modifier = Modifier
+                    .padding(12.dp)
+            )
+
+            LazyVerticalGrid(
+                modifier = Modifier
+                    .wrapContentSize(),
+                columns = GridCells.Fixed(3)
+            ) {
+                items(itemList) {
+                    MovieRow(it.name, it.id) {
+                        navController.navigate("detail_screen")
+                    }
                 }
             }
+        }
+        ButtonComponent(
+            value = "NEXT", modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .height(48.dp)
+        ) {
+            navController.navigate("detail_screen")
+
         }
     }
 

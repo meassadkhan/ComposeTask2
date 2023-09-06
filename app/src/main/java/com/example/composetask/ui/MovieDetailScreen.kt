@@ -2,19 +2,26 @@ package com.example.composetask.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +34,8 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.composetask.R
 import com.example.composetask.model.Movie
+import com.example.composetask.ui.components.ButtonComponent
+import com.example.composetask.ui.components.Header
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.squareup.moshi.Moshi
 
@@ -40,48 +49,42 @@ fun MovieDetailScreen(navHostController: NavHostController) {
     BackHandler {
         navHostController.popBackStack()
     }
-    ConstraintLayout {
-        val (topBar, image, title, subtitle, description) = createRefs()
-        TopAppBar(
-            title = {
-                Text(
-                    text = stringResource(R.string.movie_detail_screen),
-                    color = Color.Black,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .constrainAs(topBar) {
-                            top.linkTo(parent.top)
-                            bottom.linkTo(image.top)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            width = Dimension.fillToConstraints
-                        }
-                        .padding(end = 15.dp)
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth(),
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
-        )
+    ConstraintLayout(
+        modifier = Modifier
+            .background(color = Color.White)
+            .fillMaxWidth()
+            .padding(16.dp),
 
-        Image(painter = painterResource(id = R.drawable.ic_image_detail),
+        ) {
+        val (topBar, image, title, subtitle, description) = createRefs()
+
+        Header(text = "DETAILS", modifier = Modifier.constrainAs(topBar) {
+            top.linkTo(parent.top)
+            bottom.linkTo(image.top, margin = 16.dp)
+            start.linkTo(parent.start)
+        }, navHostController)
+
+        Image(
+            painter = painterResource(id = R.drawable.ic_image_detail),
             contentDescription = "Feature image",
             modifier = Modifier
-                .height(100.dp)
-                .width(100.dp)
+                .fillMaxWidth()
+                .height(200.dp)
+                .clip(shape = RoundedCornerShape(14.dp))
                 .constrainAs(image) {
-                    top.linkTo(topBar.bottom)
+                    top.linkTo(topBar.bottom, margin = 16.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     width = Dimension.fillToConstraints
-                }
+                },
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.Center
+
 
         )
 
         Text(
-            text = "365 days",
+            text = "Name: Spider Man",
             modifier = Modifier.constrainAs(title) {
                 top.linkTo(image.bottom, margin = 16.dp)
                 start.linkTo(parent.start, margin = 16.dp)
@@ -89,7 +92,7 @@ fun MovieDetailScreen(navHostController: NavHostController) {
         )
 
         Text(
-            text = "Romance",
+            text = "Category: Romance",
             modifier = Modifier.constrainAs(subtitle) {
                 top.linkTo(title.bottom, margin = 8.dp)
                 start.linkTo(title.start)
@@ -97,7 +100,7 @@ fun MovieDetailScreen(navHostController: NavHostController) {
         )
 
         Text(
-            text = "A movie to express love in a 365 ways",
+            text = "Description: A movie to kill monster  A movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monsterA movie to kill monster",
             modifier = Modifier.constrainAs(description) {
                 top.linkTo(subtitle.bottom, margin = 8.dp)
                 start.linkTo(title.start)
@@ -105,6 +108,5 @@ fun MovieDetailScreen(navHostController: NavHostController) {
                 width = Dimension.preferredWrapContent
             }
         )
-
     }
 } 

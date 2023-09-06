@@ -2,6 +2,7 @@ package com.example.composetask.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,6 +12,8 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -20,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,31 +31,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.composetask.R
 
 @Composable
-fun ButtonComponent(value: String, onClick: () -> Unit) {
+fun ButtonComponent(value: String, modifier: Modifier,onClick: () -> Unit) {
     Button(
         onClick = {
             onClick()
         },
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(48.dp),
-
+        colors =ButtonDefaults.buttonColors(colorResource(id = R.color.button_color)),
+        modifier = modifier,
         contentPadding = PaddingValues(),
 
         ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(48.dp),
+            modifier = modifier,
             contentAlignment = Alignment.Center
 
         ) {
             Text(
                 text = value,
-                fontSize = 18.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -95,16 +96,19 @@ fun TopAppBAR() {
 }
 
 @Composable
-fun Header(text:String) {
+fun Header(text:String,modifier : Modifier, navHostController: NavHostController) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .padding(start = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             modifier = Modifier
-                .padding(end = 16.dp),
+                .padding(end = 16.dp)
+                .clickable {
+                    navHostController.popBackStack()
+                },
             painter = painterResource(id = R.drawable.ic_back), contentDescription = ""
         )
 

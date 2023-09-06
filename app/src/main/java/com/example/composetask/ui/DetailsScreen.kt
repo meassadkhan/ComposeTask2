@@ -29,7 +29,6 @@ fun DetailsScreen() {
             .background(Color.White)
     ) {
         TopAppBAR()
-        Header("DETAILS")
         Spacer(modifier = Modifier
             .padding(12.dp))
     }
