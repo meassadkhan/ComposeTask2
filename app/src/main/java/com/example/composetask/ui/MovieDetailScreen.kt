@@ -1,9 +1,12 @@
 package com.example.composetask.ui
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -12,6 +15,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,8 +33,6 @@ import com.squareup.moshi.Moshi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieDetailScreen(navHostController: NavHostController) {
-    val json = navHostController.previousBackStackEntry?.savedStateHandle?.get<String>("movie")
-    val movie = json?.let { Moshi.Builder().build().adapter(Movie::class.java).fromJson(it) }
     val systemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(
         color = Color.White
@@ -51,6 +53,7 @@ fun MovieDetailScreen(navHostController: NavHostController) {
                     modifier = Modifier
                         .constrainAs(topBar) {
                             top.linkTo(parent.top)
+                            bottom.linkTo(image.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                             width = Dimension.fillToConstraints
@@ -63,10 +66,11 @@ fun MovieDetailScreen(navHostController: NavHostController) {
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
         )
 
-        AsyncImage(
-            model = movie?.imageUrl,
+        Image(painter = painterResource(id = R.drawable.ic_image_detail),
             contentDescription = "Feature image",
             modifier = Modifier
+                .height(100.dp)
+                .width(100.dp)
                 .constrainAs(image) {
                     top.linkTo(topBar.bottom)
                     start.linkTo(parent.start)
@@ -77,7 +81,7 @@ fun MovieDetailScreen(navHostController: NavHostController) {
         )
 
         Text(
-            text = stringResource(R.string.name) + " " + movie?.name,
+            text = "365 days",
             modifier = Modifier.constrainAs(title) {
                 top.linkTo(image.bottom, margin = 16.dp)
                 start.linkTo(parent.start, margin = 16.dp)
@@ -85,7 +89,7 @@ fun MovieDetailScreen(navHostController: NavHostController) {
         )
 
         Text(
-            text = stringResource(R.string.category) + " " + movie?.category,
+            text = "Romance",
             modifier = Modifier.constrainAs(subtitle) {
                 top.linkTo(title.bottom, margin = 8.dp)
                 start.linkTo(title.start)
@@ -93,7 +97,7 @@ fun MovieDetailScreen(navHostController: NavHostController) {
         )
 
         Text(
-            text = stringResource(R.string.description) + " " + movie?.desc,
+            text = "A movie to express love in a 365 ways",
             modifier = Modifier.constrainAs(description) {
                 top.linkTo(subtitle.bottom, margin = 8.dp)
                 start.linkTo(title.start)

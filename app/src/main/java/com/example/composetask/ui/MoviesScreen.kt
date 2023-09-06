@@ -7,15 +7,20 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -41,6 +46,8 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.composetask.R
 import com.example.composetask.model.Movie
+import com.example.composetask.ui.components.Header
+import com.example.composetask.ui.components.TopAppBAR
 import com.example.composetask.viewmodel.MainViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.squareup.moshi.Moshi
@@ -48,82 +55,37 @@ import com.squareup.moshi.Moshi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoviesScreen(viewModel: MainViewModel, navController: NavController) {
+    data class Movie(var name: String, var id: Int)
+
+    var itemList = ArrayList<Movie>()
+
+    itemList.add(Movie("SpoiderMan", R.drawable.ic_image))
+    itemList.add(Movie("SpoiderMan", R.drawable.ic_image))
+    itemList.add(Movie("SpoiderMan", R.drawable.ic_image))
+    itemList.add(Movie("SpoiderMan", R.drawable.ic_image))
+    itemList.add(Movie("SpoiderMan", R.drawable.ic_image))
+    itemList.add(Movie("SpoiderMan", R.drawable.ic_image))
+    itemList.add(Movie("SpoiderMan", R.drawable.ic_image))
+
     val systemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(
         color = Color.White
     )
-    val movies = remember {
-        mutableStateListOf<Movie>()
-    }
-    LoadingBar(isLoading = movies.isEmpty())
-    LaunchedEffect(key1 = true, block = {
-        movies.addAll(viewModel.getMovies())
-    })
-    Column {
-        TopAppBar(
-            title = {
-                Text(
-                    text = stringResource(R.string.movies_screen),
-                    color = Color.Black,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 15.dp)
-                )
-            },
+    Column(
+        modifier = Modifier
+            .background(Color.White)
+    ) {
+        TopAppBAR()
+        Header("MOVIES")
+        Spacer(
             modifier = Modifier
-                .fillMaxWidth(),
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                .padding(12.dp)
         )
 
-        LazyColumn(modifier = Modifier.background(color = Color.White)) {
-            items(movies) { movie ->
-                Column(
-                    horizontalAlignment = Alignment.Start,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(color = Color.Gray.copy(alpha = 0.5f)),
-                    verticalArrangement = Arrangement.Top,
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(5.dp),
-                        verticalAlignment = Alignment.Top,
-                        modifier = Modifier.clickable(
-                            interactionSource = MutableInteractionSource(),
-                            indication = null
-                        ) {
-                            val json =
-                                Moshi.Builder().build().adapter(Movie::class.java).toJson(movie)
-                            navController.navigate("detail_screen") {
-                                navController.currentBackStackEntry?.savedStateHandle?.set(
-                                    "movie",
-                                    json
-                                )
-                            }
-                        }
-                    ) {
-                        AsyncImage(
-                            model = movie.imageUrl,
-                            modifier = Modifier
-                                .padding(5.dp)
-                                .size(60.dp)
-                                .clip(CircleShape),
-                            contentScale = ContentScale.Crop, contentDescription = null
-                        )
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(5.dp),
-                            modifier = Modifier.padding(top = 5.dp, bottom = 8.dp)
-                        ) {
-                            TextFun(text = stringResource(R.string.name) + " " + movie.name)
-                            TextFun(text = stringResource(R.string.category) + " " + movie.category)
-                            TextFun(text = stringResource(R.string.description) + " " + movie.desc)
-                        }
-                    }
-
+        LazyVerticalGrid(columns = GridCells.Fixed(3)) {
+            items(itemList) {
+                MovieRow(it.name, it.id) {
+                    navController.navigate("detail_screen")
                 }
             }
         }
@@ -153,6 +115,7 @@ fun LoadingBar(isLoading: Boolean) {
         }
     }
 }
+
 @Composable
 @Preview
 fun MovieScreenPreview() {

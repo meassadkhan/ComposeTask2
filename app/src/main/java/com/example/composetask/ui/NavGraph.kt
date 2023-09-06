@@ -20,5 +20,4 @@ fun NavGraph(viewModel: MainViewModel) {
             MovieDetailScreen(navController)
         }
     }
-
 }
